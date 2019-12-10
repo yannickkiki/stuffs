@@ -1,0 +1,28 @@
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Submit</button>
+</form>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Uploaded at</th>
+      <th>Size</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for document in documents %}
+      <tr>
+        <td><a href="{{ document.file.url }}" target="_blank">{{ document.file.name }}</a></td>
+        <td>{{ document.uploaded }}</td>
+        <td>{{ document.file.size|filesizeformat }}</td>
+      </tr>
+    {% empty %}
+      <tr>
+        <td colspan="3">No data.</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>

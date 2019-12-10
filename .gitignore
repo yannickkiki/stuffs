@@ -1,0 +1,17 @@
+venv
+.vscode
+.idea
+__pycache__
+*.pyc
+.idea
+.env
+local
+*.log
+*.pot
+db.sqlite3
+tmp
+*.egg-info
+local
+_local
+_local/*
+*local.*

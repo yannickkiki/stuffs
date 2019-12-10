@@ -1,0 +1,29 @@
+p{
+	font-size: xx-large;
+	font-family: "Arial Black";
+	font-style: italic;
+	font-weight: bold;
+	text-align: center;
+	/* opacity: 0.6; */
+	background-color: rgba(0, 0, 255, 0.5); /* Fond blue à moitié transparent */
+	box-shadow: 6px 6px 0px black;
+	border-radius: 10px;
+	text-shadow: 2px 2px 4px black;
+}
+
+h1{
+	/* color: maroon; */
+	border: 3px blue dashed;
+}
+
+body{
+	background-color: black;
+    color: white;
+    background-image: url("file.jpeg");
+    background-attachment: fixed;
+}
+
+mark{
+	background-color: red;
+	color: black;
+}

@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Select calendar</title>
+    <link href="https://unpkg.com/tailwindcss@^1.0/dist/tailwind.min.css" rel="stylesheet">
+</head>
+
+<body class="flex justify-center items-center" style="height: 600px;">
+    <form class="w-full max-w-sm" method="post">
+        <p class="text-gray-600 pb-10 text-center">Select existing calendar or create new one</p>
+        <div class="flex items-center border-b border-b-2 border-blue-500 py-2">
+            <input class="appearance-none bg-transparent border-none w-full text-gray-700 mr-3 py-1 px-2 leading-tight focus:outline-none" type="text" placeholder="Jane Doe" aria-label="Full name">
+            <button class="flex-shrink-0 bg-blue-500 hover:bg-blue-700 border-blue-500 hover:border-blue-700 text-sm border-4 text-white py-1 px-2 rounded" type="button">
+              Submit
+            </button>
+        </div>
+    </form>
+    <footer class="absolute bottom-0 w-full">
+        <p class="text-center pb-4 flex justify-center">
+          <strong class="text-gray-800">Calendify by</strong>
+            <a class="ml-2 flex justify-center" href="https://www.trybeans.com/" target="_blank">
+                <img src="{% static 'pin/svg/beans-logo.svg' %}">
+            </a>
+        </p>
+    </footer>
+</body>
+</html>
