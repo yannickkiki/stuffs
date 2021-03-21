@@ -13,7 +13,7 @@ with open(os.path.join(os.path.dirname(__file__), 'COPYRIGHT.txt')) as copy_righ
 setup(
     name='travis',
     version='0.1.0',
-    scripts=['script'],
+    scripts=['script.sh'],
     packages=[f'travis.{x}' for x in find_packages('travis')],
     license=COPYRIGHT,
     description='Packaging testing.',

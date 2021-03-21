@@ -1,7 +1,12 @@
 from django.db import models
+models.F
 
 from .metacard import MetaCard
 from .trellis_card import TrellisCard
+
+
+class ProductManager(models.Manager):
+    pass
 
 
 class Product(models.Model):
@@ -13,5 +18,12 @@ class Product(models.Model):
     metacard = models.OneToOneField(MetaCard, related_name='product', on_delete=models.CASCADE, null=True)
     trellis_card = models.OneToOneField(TrellisCard, related_name='product', on_delete=models.CASCADE, null=True)
 
+<<<<<<< 7d7b3797e712139683354bc252c7bb08819db15c
 
 Product.objects.all()
+=======
+    objects = ProductManager()
+
+
+Product.objects.filter()
+>>>>>>> - stuffs

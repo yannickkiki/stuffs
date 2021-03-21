@@ -1,14 +1,23 @@
+<<<<<<< 7d7b3797e712139683354bc252c7bb08819db15c
 import json
 import os
 from instaloader import Instaloader, Profile, FrozenNodeIterator
 
 username = 'yannick_kiki'
 password = 'xxx'
+=======
+import os
+from instaloader import Instaloader, Profile
+
+username = 'yannick_kiki'
+password = 'Peace1999'
+>>>>>>> - stuffs
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 filename = f'{BASE_DIR}/session-{username}'
 
 L = Instaloader()
+<<<<<<< 7d7b3797e712139683354bc252c7bb08819db15c
 L.login(username, password)
 L.save_session_to_file(filename)
 
@@ -83,3 +92,9 @@ L.load_session_from_cookies(username, session_cookies_dict_)
 
 profile = Profile.from_username(L.context, username)
 followers = profile.get_followers()
+=======
+L.load_session_from_file(username, filename)
+
+profile = Profile.from_username(L.context, 'yannick_kiki')
+followees = list(profile.get_followees())
+>>>>>>> - stuffs
