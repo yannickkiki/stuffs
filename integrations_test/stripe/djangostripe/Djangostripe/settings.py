@@ -20,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'jzsabyqu=+wv2j=%rn(eyj@c6di$)rr6l04_v=%6unba7dwtam'
+SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -123,9 +123,10 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'static')]
 
-STRIPE_PUBLISHABLE_KEY = 'pk_test_51IiGHyI2U3SMjKV5oULAnNuWYuzvgr6cFjvMm2HlH5WiJV8rLsB3RUiPA4u2P4BHzdjLj7GICzXySx3LO5XdcdWy00BgzpRYEV'
-STRIPE_SECRET_KEY = 'sk_test_51IiGHyI2U3SMjKV5Ur5iMOQicRFLJ0uBc3BLkNunjQlBadQX4utsThre5jK5RLqRLQgtH8J0YLaIoEDr2PsUdmoo00DNxBGd2a'
-STRIPE_PRICE_ID = 'price_1IiMx0I2U3SMjKV5bvkjGR9g'
+STRIPE_PUBLISHABLE_KEY = os.getenv('STRIPE_PUBLISHABLE_KEY')
+STRIPE_SECRET_KEY = os.getenv('STRIPE_SECRET_KEY')
+STRIPE_PRICE_ID = os.getenv('STRIPE_PRICE_ID')
+STRIPE_ENDPOINT_SECRET = os.getenv('STRIPE_ENDPOINT_SECRET')
 
 
 AUTH_USER_MODEL = 'user.User'
