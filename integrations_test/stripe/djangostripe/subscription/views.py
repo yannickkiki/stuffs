@@ -1,46 +1,55 @@
-import stripe
 from django.conf import settings
-from django.contrib.auth.decorators import login_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http.response import JsonResponse, HttpResponse
-from django.shortcuts import render
+from django.utils.decorators import method_decorator
+from django.views import View
 from django.views.decorators.csrf import csrf_exempt
+from django.views.generic import TemplateView
 
 from subscription.models import StripeCustomer
 from user.models import User
 
+import stripe
 
-@login_required
-def home(request):
-    try:
-        # Retrieve the subscription & product
-        stripe_customer = StripeCustomer.objects.get(user=request.user)
+
+class CsrfExemptMixin:
+
+    @method_decorator(csrf_exempt)
+    def dispatch(self, request, *args, **kwargs):
+        return super().dispatch(request, *args, **kwargs)
+
+
+class HomeView(LoginRequiredMixin, TemplateView):
+    template_name = 'home.html'
+
+    def get_context_data(self, **kwargs):
+        try:
+            stripe_customer = StripeCustomer.objects.get(user=self.request.user)
+        except StripeCustomer.DoesNotExist:
+            return {}
+
         stripe.api_key = settings.STRIPE_SECRET_KEY
-        subscription = stripe.Subscription.retrieve(stripe_customer.stripe_subscription_id)
-        product = stripe.Product.retrieve(subscription.plan.product)
+        stripe_subscription = stripe.Subscription.retrieve(stripe_customer.stripe_subscription_id)
+        stripe_product = stripe.Product.retrieve(stripe_subscription.plan.product)
 
-        # Feel free to fetch any additional data from 'subscription' or 'product'
-        # https://stripe.com/docs/api/subscriptions/object
-        # https://stripe.com/docs/api/products/object
-
-        return render(request, 'home.html', {
-            'subscription': subscription,
-            'product': product,
-        })
-
-    except StripeCustomer.DoesNotExist:
-        return render(request, 'home.html')
+        return {
+            'subscription': stripe_subscription,
+            'product': stripe_product,
+        }
 
 
-@csrf_exempt
-def stripe_config(request):
-    if request.method == 'GET':
+class StripeConfigView(CsrfExemptMixin, View):
+
+    @staticmethod
+    def get(request):
         stripe_config = {'publicKey': settings.STRIPE_PUBLISHABLE_KEY}
         return JsonResponse(stripe_config, safe=False)
 
 
-@csrf_exempt
-def create_checkout_session(request):
-    if request.method == 'GET':
+class CreateCheckoutSessionView(CsrfExemptMixin, View):
+
+    @staticmethod
+    def get(request):
         domain_url = 'http://localhost:8000/'
         stripe.api_key = settings.STRIPE_SECRET_KEY
         try:
@@ -57,57 +66,56 @@ def create_checkout_session(request):
                     }
                 ]
             )
-            return JsonResponse({'sessionId': checkout_session['id']})
         except Exception as e:
             return JsonResponse({'error': str(e)})
+        else:
+            return JsonResponse({'sessionId': checkout_session['id']})
 
 
-@login_required
-def success(request):
-    return render(request, 'success.html')
+class SuccessView(LoginRequiredMixin, TemplateView):
+    template_name = 'success.html'
 
 
-@login_required
-def cancel(request):
-    return render(request, 'cancel.html')
+class CancelView(LoginRequiredMixin, TemplateView):
+    template_name = 'cancel.html'
 
 
-@csrf_exempt
-def stripe_webhook(request):
-    stripe.api_key = settings.STRIPE_SECRET_KEY
-    endpoint_secret = settings.STRIPE_ENDPOINT_SECRET
-    payload = request.body
-    sig_header = request.META['HTTP_STRIPE_SIGNATURE']
-    print(f"Payload: {payload}, Sig_header: {sig_header}")
+class StripeWebhookView(CsrfExemptMixin, View):
 
-    try:
-        event = stripe.Webhook.construct_event(
-            payload, sig_header, endpoint_secret
-        )
-    except ValueError:
-        # Invalid payload
-        return HttpResponse(status=400)
-    except stripe.error.SignatureVerificationError:
-        # Invalid signature
-        return HttpResponse(status=400)
+    @staticmethod
+    def post(request):
+        stripe.api_key = settings.STRIPE_SECRET_KEY
+        endpoint_secret = settings.STRIPE_ENDPOINT_SECRET
+        payload = request.body
+        sig_header = request.META['HTTP_STRIPE_SIGNATURE']
 
-    print(f"\n\nMy e Event: {event}\n\n")
-    # Handle the checkout.session.completed event
-    if event['type'] == 'checkout.session.completed':
-        session = event['data']['object']
+        try:
+            event = stripe.Webhook.construct_event(
+                payload, sig_header, endpoint_secret
+            )
+        except ValueError:
+            # Invalid payload
+            return HttpResponse(status=400)
+        except stripe.error.SignatureVerificationError:
+            # Invalid signature
+            return HttpResponse(status=400)
 
-        # Fetch all the required data from session
-        client_reference_id = session.get('client_reference_id')
-        stripe_customer_id = session.get('customer')
-        stripe_subscription_id = session.get('subscription')
+        # Handle the checkout.session.completed event
+        if event['type'] == 'checkout.session.completed':
+            session = event['data']['object']
 
-        # Get the user and create a new StripeCustomer
-        user = User.objects.get(id=client_reference_id)
-        StripeCustomer.objects.create(
-            user=user,
-            stripe_customer_id=stripe_customer_id,
-            stripe_subscription_id=stripe_subscription_id,
-        )
-        print(user.username + ' just subscribed.')
+            # Fetch all the required data from session
+            client_reference_id = session.get('client_reference_id')
+            stripe_customer_id = session.get('customer')
+            stripe_subscription_id = session.get('subscription')
 
-    return HttpResponse(status=200)
+            # Get the user and create a new StripeCustomer
+            user = User.objects.get(id=client_reference_id)
+            StripeCustomer.objects.create(
+                user=user,
+                stripe_customer_id=stripe_customer_id,
+                stripe_subscription_id=stripe_subscription_id,
+            )
+            print(user.username + ' just subscribed.')
+
+        return HttpResponse(status=200)

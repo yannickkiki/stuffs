@@ -1,11 +1,11 @@
 from django.urls import path
-from . import views
+from .views import HomeView, StripeConfigView, CreateCheckoutSessionView, SuccessView, CancelView, StripeWebhookView
 
 urlpatterns = [
-    path('', views.home, name='subscriptions-home'),
-    path('config/', views.stripe_config),
-    path('create-checkout-session/', views.create_checkout_session),
-    path('success/', views.success),
-    path('cancel/', views.cancel),
-    path('webhook/', views.stripe_webhook)
+    path('', HomeView.as_view(), name='subscriptions-home'),
+    path('config/', StripeConfigView.as_view()),
+    path('create-checkout-session/', CreateCheckoutSessionView.as_view()),
+    path('success/', SuccessView.as_view()),
+    path('cancel/', CancelView.as_view()),
+    path('webhook/', StripeWebhookView.as_view())
 ]
