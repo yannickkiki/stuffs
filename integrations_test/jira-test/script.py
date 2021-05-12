@@ -1,7 +1,7 @@
 from collections import namedtuple
 import json
 
-from jira.client import JIRA as BaseJIRA, json_loads, JIRAError, OrderedDict
+from jira.client import JIRA as BaseJIRA, json_loads, OrderedDict
 from jira.resources import User
 
 
@@ -11,49 +11,33 @@ def convert_to_object(object_name: str, d: dict):
 
 
 class ClientMixin:
-    def add_user(self, username, email, directoryId=1, password=None,
-                 fullname=None, notify=False, active=True, ignore_existing=False, application_keys=None):
-
-        if not fullname:
-            fullname = username
-
-        # of 1 which is the internal one.
-        url = self._options['server'] + '/rest/api/latest/user'
-
-        # implementation based on
-        # https://docs.atlassian.com/jira/REST/ondemand/#d2e5173
-        x = OrderedDict()
-
-        x['displayName'] = fullname
-        x['emailAddress'] = email
-        x['name'] = username
+    def add_user(self, username, email, password=None, fullname=None):
+        body_params = {
+            'displayName': fullname or username,
+            'emailAddress': email,
+            'name': username,
+        }
         if password:
-            x['password'] = password
-        if notify:
-            x['notification'] = 'True'
-        if application_keys is not None:
-            x['applicationKeys'] = application_keys
+            body_params['password'] = password
 
-        payload = json.dumps(x)
-        try:
-            response = self._session.post(url, data=payload)
-        except JIRAError as e:
-            err = e.response.json()['errors']
-            if 'username' in err and err['username'] == 'A user with that username already exists.' and ignore_existing:
-                return True
-            raise e
+        response = self._session.post(
+            url=self._options['server'] + '/rest/api/latest/user',
+            data=json.dumps(body_params)
+        )
 
         user_data = json_loads(response)
         return convert_to_object('User', user_data)
 
     def add_user_to_group(self, account_id, group_name):
-        url = self._options['server'] + '/rest/api/latest/group/user'
-        x = {'groupname': group_name}
-        y = {'accountId': account_id}
+        body_params = {'accountId': account_id}
 
-        payload = json.dumps(y)
+        response = self._session.post(
+            url=self._options['server'] + '/rest/api/latest/group/user',
+            params={'groupname': group_name},
+            data=json.dumps(body_params)
+        )
 
-        r = json_loads(self._session.post(url, params=x, data=payload))
+        r = json_loads(response)
         if 'name' not in r or r['name'] != group_name:
             return False
         else:
@@ -68,7 +52,7 @@ class ClientMixin:
 
         return True
 
-    def search_users(self, query, startAt=0, maxResults=50, includeActive=True, includeInactive=False):
+    def search_users(self, query, startAt=0, maxResults=50):
         params = {
             'query': query,
         }
