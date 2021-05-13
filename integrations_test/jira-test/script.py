@@ -59,7 +59,7 @@ class ClientMixin:
         return self._fetch_pages(User, None, 'user/search', startAt, maxResults, params)
 
 
-class JIRA(ClientMixin, BaseJIRA):
+class JIRA(BaseJIRA):
     pass
 
 
