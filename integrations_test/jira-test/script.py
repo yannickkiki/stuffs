@@ -90,5 +90,5 @@ user = jira_client.add_user(username="seyivevelo", email="seyive+velo@trellix.io
 jira_client.add_user_to_group(account_id=user.accountId, group_name="jira-servicedesk-users")
 jira_client.remove_user_from_group(account_id='609c10df97f3d40070b8b75f', group_name="jira-software-users")
 
-users = jira_client.search_users(query="seyivevelo")
+users = jira_client.search_users(query="seyivevelii")
 # jira_client.search_users('.')

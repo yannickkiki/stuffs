@@ -14,6 +14,7 @@ class ProductCategory(models.Model):
 class Product(models.Model):
     name = models.CharField(max_length=255)
     category_id = models.IntegerField()  # foreign key referencing ProductCategory
+    is_active = models.BooleanField(default=False)
 
 
 class ProductSettings(models.Model):
