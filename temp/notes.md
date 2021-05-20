@@ -1,0 +1,1 @@
+* Deprecation notice: https://developer.atlassian.com/cloud/jira/platform/deprecation-notice-user-privacy-api-migration-guide/
