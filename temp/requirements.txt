@@ -1,1 +1,0 @@
-git+git://github.com/pycontribs/jira.git@630973fa5d16abe3ba69ae57dc1e5ec7d8afe3e2#egg=jira

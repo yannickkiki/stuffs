@@ -64,8 +64,8 @@ class JIRA(BaseJIRA):
 
 
 server_url = 'https://almeki.atlassian.net'
-jira_client = JIRA(server_url, basic_auth=('almeki.dev@gmail.com', 'jw6akZZSYMT3bdzAjk8Z388B'))
-# jira_client = BaseJIRA('https://almeki.atlassian.net/', basic_auth=('almeki.dev@gmail.com', 'jw6akZZSYMT3bdzAjk8Z388B'))
+jira_client = JIRA(server_url, basic_auth=('almeki.dev@gmail.com', 'xxx'))
+# jira_client = BaseJIRA('https://almeki.atlassian.net/', basic_auth=('almeki.dev@gmail.com', 'xxx'))
 issue = jira_client.issue('BEN-13')
 
 projects = jira_client.projects()
