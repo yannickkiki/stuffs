@@ -83,7 +83,6 @@ DATABASES = {
         "USER": "dockerify_api",
         "PASSWORD": "cyneta-suspega-korel",
         "HOST": "postgresdb",
-        # "HOST": "127.0.0.1",
         "PORT": "5432"
     },
 }
