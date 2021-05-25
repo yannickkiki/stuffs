@@ -84,15 +84,17 @@ WSGI_APPLICATION = 'Dockerify.wsgi.application'
 #     }
 # }
 
-from django.db.backends import mysql
+# from django.db.backends import mysql
+# sudo docker run --detach -p 8306:3306 --volume dockerify-mysql-data -e MYSQL_ROOT_PASSWORD=cyneta-suspega-korel -e MYSQL_DATABASE=dockerify mysql:5.7
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.mysql",
         "NAME": "dockerify",
-        "USER": "dockerify_api",
+        # "USER": "dockerify_api",
+        "USER": "root",
         "PASSWORD": "cyneta-suspega-korel",
         "HOST": "127.0.0.1",
-        "PORT": "5432"
+        "PORT": "8306"
     },
 }
 
