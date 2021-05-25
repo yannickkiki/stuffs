@@ -75,36 +75,15 @@ WSGI_APPLICATION = 'Dockerify.wsgi.application'
 
 
 # Database
-# https://docs.djangoproject.com/en/2.2/ref/settings/#databases
-
-# DATABASES = {
-#     'default': {
-#         'ENGINE': 'django.db.backends.sqlite3',
-#         'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
-#     }
-# }
-
-# from django.db.backends import mysql
-# sudo docker run --detach --publish 8306:3306 --volume dockerify-mysql-data -e MYSQL_ROOT_PASSWORD=cyneta-suspega-korel -e MYSQL_DATABASE=dockerify mysql:5.7
-# DATABASES = {
-#     "default": {
-#         "ENGINE": "django.db.backends.mysql",
-#         "NAME": "dockerify",
-#         # "USER": "dockerify_api",
-#         "USER": "root",
-#         "PASSWORD": "cyneta-suspega-korel",
-#         "HOST": "127.0.0.1",
-#         "PORT": "8306"
-#     },
-# }
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.postgresql_psycopg2",
+        "ENGINE": "django.db.backends.postgresql",
         "NAME": "dockerify",
         "USER": "dockerify_api",
         "PASSWORD": "cyneta-suspega-korel",
-        "HOST": "127.0.0.1",
+        "HOST": "postgresdb",
+        # "HOST": "127.0.0.1",
         "PORT": "5432"
     },
 }
