@@ -5,21 +5,21 @@ services:
     image: postgres:13.3
     volumes:
       - postgres-db-data:/var/lib/postgresql/
-    environment:
-      - POSTGRES_DB=dockerify
-      - POSTGRES_USER=dockerify_api
-      - POSTGRES_PASSWORD=cyneta-suspega-korel
     ports:
       - 8432:5432
+    env_file:
+      - .docker-services-envs/postgresdb.env
   web:
     build: .
+    depends_on:
+      - postgresdb
     command: bash -c "python .scripts/wait_db.py && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/app
     ports:
       - 8000:8000
-    depends_on:
-      - postgresdb
+    env_file:
+      - .docker-services-envs/web.env
 
 volumes:
   postgres-db-data:

@@ -79,11 +79,11 @@ WSGI_APPLICATION = 'Dockerify.wsgi.application'
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": "dockerify",
-        "USER": "dockerify_api",
-        "PASSWORD": "cyneta-suspega-korel",
-        "HOST": "postgresdb",
-        "PORT": "5432"
+        "NAME": os.environ['POSTGRES_DB_NAME'],
+        "USER": os.environ['POSTGRES_DB_USER'],
+        "PASSWORD": os.environ['POSTGRES_DB_PASSWORD'],
+        "HOST": os.environ['POSTGRES_DB_HOST'],
+        "PORT": os.environ['POSTGRES_DB_PORT']
     },
 }
 

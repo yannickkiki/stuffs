@@ -1,12 +1,13 @@
 import socket
 import time
+import os
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-db_host, db_port = 'postgresdb', 5432
+db_host, db_port = os.environ['POSTGRES_DB_HOST'], os.environ['POSTGRES_DB_PORT']
 while True:
     try:
-        s.connect((db_host, db_port))
+        s.connect((db_host, int(db_port)))
         s.close()
         break
     except socket.error:
