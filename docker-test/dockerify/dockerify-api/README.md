@@ -1,9 +1,5 @@
-To run the project locally in a docker container:
+To run the project locally, run `sudo docker-compose up` and go to 
+http://localhost:8000 .
 
-    * sudo docker-compose up
-
-
-- Fix the issue with containers sync
-- Add migrate to the process:
-  (sudo docker exec -it {container_name} python manage.py migrate) could work
-  
+- Pourquoi venv est copié malgré dockerignore?
+- set host, port, etc as env variables
