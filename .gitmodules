@@ -1,0 +1,4 @@
+[submodule "integrations_test/moxiworks-connect"]
+	path = integrations_test/moxiworks-connect
+	url = git@github.com:yannickkiki/moxiworks-connect.git
+	branch = master
