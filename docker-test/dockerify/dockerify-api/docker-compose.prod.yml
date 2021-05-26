@@ -1,0 +1,29 @@
+version: "3.9"
+
+services:
+  postgresdb:
+    image: postgres:13.3
+    volumes:
+      - postgres-db-data:/var/lib/postgresql/
+    expose:
+      - 5432
+    env_file:
+      - .docker-services-envs/prod/postgresdb.env
+  web:
+    build: .
+    depends_on:
+      - postgresdb
+    command: bash -c "python .scripts/wait_db.py && python manage.py migrate && gunicorn Dockerify.wsgi:application --bind 0.0.0.0:8000"
+    expose:
+      - 8000
+    env_file:
+      - .docker-services-envs/prod/web.env
+  nginx:
+    build: ./.nginx/
+    ports:
+      - 1337:80
+    depends_on:
+      - web
+
+volumes:
+  postgres-db-data:

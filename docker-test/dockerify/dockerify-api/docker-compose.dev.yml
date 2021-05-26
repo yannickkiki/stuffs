@@ -5,10 +5,10 @@ services:
     image: postgres:13.3
     volumes:
       - postgres-db-data:/var/lib/postgresql/
-    ports:
-      - 8432:5432
+    expose:
+      - 5432
     env_file:
-      - .docker-services-envs/postgresdb.env
+      - .docker-services-envs/dev/postgresdb.env
   web:
     build: .
     depends_on:
@@ -19,7 +19,7 @@ services:
     ports:
       - 8000:8000
     env_file:
-      - .docker-services-envs/web.env
+      - .docker-services-envs/dev/web.env
 
 volumes:
   postgres-db-data:
