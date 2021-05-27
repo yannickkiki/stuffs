@@ -13,7 +13,10 @@ services:
     build: .
     depends_on:
       - postgresdb
-    command: bash -c "python .scripts/wait_db.py && python manage.py migrate && gunicorn Dockerify.wsgi:application --bind 0.0.0.0:8000"
+    command: bash -c "python manage.py collectstatic && python .scripts/wait_db.py && python manage.py migrate && gunicorn Dockerify.wsgi:application --bind 0.0.0.0:8000"
+    volumes:
+    - static-files:/app/staticfiles/
+    - media-files:/app/mediafiles/
     expose:
       - 8000
     env_file:
@@ -21,9 +24,14 @@ services:
   nginx:
     build: ./.nginx/
     ports:
-      - 1337:80
+      - 80:80
     depends_on:
       - web
+    volumes:
+    - static-files:/home/app/web/staticfiles/
+    - media-files:/home/app/web/mediafiles/
 
 volumes:
   postgres-db-data:
+  static-files:
+  media-files:
