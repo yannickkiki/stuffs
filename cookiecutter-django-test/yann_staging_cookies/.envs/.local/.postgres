@@ -1,0 +1,7 @@
+# PostgreSQL
+# ------------------------------------------------------------------------------
+POSTGRES_HOST=postgres
+POSTGRES_PORT=5432
+POSTGRES_DB=yann_staging_cookies
+POSTGRES_USER=FSMWtQjgGxWszkCFXFodmpdPsllvZhRh
+POSTGRES_PASSWORD=jLAHHpCKVDQJRzZA6Ow1DwFoYTmtpwBI6q7nOYgRkTqkiVeihPH7DqBLpiP5HkfP
