@@ -15,23 +15,46 @@ services:
       - postgresdb
     command: bash -c "python manage.py collectstatic && python .scripts/wait_db.py && python manage.py migrate && gunicorn Dockerify.wsgi:application --bind 0.0.0.0:8000"
     volumes:
-    - static-files:/app/staticfiles/
-    - media-files:/app/mediafiles/
+      - static-files:/app/staticfiles/
+      - media-files:/app/mediafiles/
     expose:
       - 8000
     env_file:
       - .docker-services-envs/prod/web.env
-  nginx:
+  nginx-proxy:
+    container_name: nginx-proxy
     build: ./.nginx/
+    restart: always
     ports:
+      - 443:443
       - 80:80
+    volumes:
+      - static-files:/app/staticfiles/
+      - media-files:/app/mediafiles/
+      - certs:/etc/nginx/certs
+      - html:/usr/share/nginx/html
+      - vhost:/etc/nginx/vhost.d
+      - /var/run/docker.sock:/tmp/docker.sock:ro
     depends_on:
       - web
+  nginx-proxy-ssl:
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    env_file:
+      - .docker-services-envs/prod/nginx-proxy-ssl.env
     volumes:
-    - static-files:/home/app/web/staticfiles/
-    - media-files:/home/app/web/mediafiles/
+      - certs:/etc/nginx/certs
+      - html:/usr/share/nginx/html
+      - vhost:/etc/nginx/vhost.d
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - acme:/etc/acme.sh
+    depends_on:
+      - nginx-proxy
 
 volumes:
   postgres-db-data:
   static-files:
   media-files:
+  certs:
+  html:
+  vhost:
+  acme:

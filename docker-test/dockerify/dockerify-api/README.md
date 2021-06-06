@@ -20,6 +20,9 @@ The docker conf will be updated to avoid these permissions issues soon.
 
 Some useful links:
 * https://testdriven.io/blog/dockerizing-django-with-postgres-gunicorn-and-nginx/
+* https://gist.github.com/yannickkiki/f7f894541aca8ff56bb544176f0e0439
+* https://hub.docker.com/r/jwilder/nginx-proxy
+* https://hub.docker.com/r/nginxproxy/acme-companion
 
 
 ### ToDo
