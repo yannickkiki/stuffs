@@ -2,18 +2,22 @@ version: "3.9"
 
 services:
   web:
-    build: .
-    command: bash -c "python manage.py collectstatic --no-input && python .scripts/wait_db.py && python manage.py migrate && gunicorn Dockerify.wsgi:application --bind 0.0.0.0:8000"
+    build:
+      context: .
+      dockerfile: ./docker-compose/prod/web/Dockerfile
     volumes:
       - static-files:/app/staticfiles/
       - media-files:/app/mediafiles/
     expose:
       - 8000
     env_file:
-      - .docker-services-envs/prod/web.env
+      - ./docker-compose/prod/web/.env
+    command: bash ./docker-compose/prod/web/start.sh
   nginx-proxy:
     container_name: nginx-proxy
-    build: ./.nginx/
+    build:
+      context: .
+      dockerfile: ./docker-compose/prod/nginx-proxy/Dockerfile
     restart: always
     ports:
       - 443:443
@@ -29,14 +33,14 @@ services:
       - web
   nginx-proxy-ssl:
     image: jrcs/letsencrypt-nginx-proxy-companion
-    env_file:
-      - .docker-services-envs/prod/nginx-proxy-ssl.env
     volumes:
       - certs:/etc/nginx/certs
       - html:/usr/share/nginx/html
       - vhost:/etc/nginx/vhost.d
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - acme:/etc/acme.sh
+    env_file:
+      - ./docker-compose/prod/nginx-proxy-ssl/.env
     depends_on:
       - nginx-proxy
 

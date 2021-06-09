@@ -8,18 +8,21 @@ services:
     expose:
       - 5432
     env_file:
-      - .docker-services-envs/dev/postgresdb.env
+      - ./docker-compose/dev/postgresdb/.env
   web:
-    build: .
+    build:
+      context: .
+      dockerfile: ./docker-compose/dev/web/Dockerfile
+      network: host
     depends_on:
       - postgresdb
-    command: bash -c "python .scripts/wait_db.py && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     volumes:
       - .:/app
     ports:
       - 8000:8000
     env_file:
-      - .docker-services-envs/dev/web.env
+      - ./docker-compose/dev/web/.env
+    command: bash ./docker-compose/dev/web/start.sh
 
 volumes:
   postgres-db-data:

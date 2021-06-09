@@ -17,7 +17,6 @@ ALLOWED_HOSTS = ['*']
 
 
 # Application definition
-
 INSTALLED_APPS = [
     # Django apps
     'django.contrib.admin',
@@ -31,8 +30,8 @@ INSTALLED_APPS = [
     'rest_framework',
 
     # Local apps
-    'product',
-    'upload',
+    'platify.product',
+    'platify.upload',
 ]
 
 MIDDLEWARE = [
@@ -45,7 +44,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'Dockerify.urls'
+ROOT_URLCONF = 'config.urls'
 
 TEMPLATES = [
     {
@@ -63,7 +62,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'Dockerify.wsgi.application'
+WSGI_APPLICATION = 'config.wsgi.application'
 
 
 # Database

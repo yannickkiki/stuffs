@@ -5,7 +5,7 @@ from django.contrib import admin
 
 from rest_framework import routers
 
-from product.viewsets import ProductViewSet
+from platify.product.viewsets import ProductViewSet
 
 router = routers.DefaultRouter()
 router.register(r'product', ProductViewSet)
@@ -13,7 +13,7 @@ router.register(r'product', ProductViewSet)
 urlpatterns = [
     path('', include(router.urls)),
     path('admin/', admin.site.urls),
-    path('upload/', include(('upload.urls', 'upload'), namespace='upload')),
+    path('upload/', include(('platify.upload.urls', 'upload'), namespace='upload')),
 ]
 
 if settings.DEBUG:

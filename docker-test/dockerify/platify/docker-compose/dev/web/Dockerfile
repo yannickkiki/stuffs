@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1
+# syntax=docker-compose/dockerfile:1
 FROM python:3.7.10-buster
 WORKDIR /app
 COPY requirements.txt .
