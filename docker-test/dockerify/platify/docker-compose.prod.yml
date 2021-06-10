@@ -22,8 +22,8 @@ services:
       - static_files:/app/staticfiles/
       - media_files:/app/mediafiles/
     env_file:
-      - compose/prod/django/.env
-      - compose/prod/django/web/proxy.env
+      - ./compose/prod/django/.env
+      - ./compose/prod/django/web/proxy.env
     command: bash ./compose/prod/django/web/start.sh
 
   celeryworker:
@@ -37,15 +37,15 @@ services:
     <<: *django
     container_name: celery_flower
     env_file:
-      - compose/prod/django/.env
-      - compose/prod/django/celery/flower/proxy.env
+      - ./compose/prod/django/.env
+      - ./compose/prod/django/celery/flower/proxy.env
     command: bash ./compose/prod/django/celery/flower/start.sh
 
   nginxproxy:
     container_name: nginx_proxy
     build:
       context: .
-      dockerfile: compose/prod/nginx/proxy/Dockerfile
+      dockerfile: ./compose/prod/nginx/proxy/Dockerfile
     restart: always
     ports:
       - "443:443"
@@ -70,7 +70,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - acme:/etc/acme.sh
     env_file:
-      - compose/prod/nginx/ssl/.env
+      - ./compose/prod/nginx/ssl/.env
     depends_on:
       - nginxproxy
 

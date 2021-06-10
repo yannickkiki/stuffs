@@ -3,3 +3,6 @@
     * to fix unprotected private key file warning:
         * `sudo chmod 600 ~/.ssh/templatify_aws_instance.pem`
     
+* deploy prod
+    * `docker-compose -f docker-compose.prod.yml up -d --build`
+    

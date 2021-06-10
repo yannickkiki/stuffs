@@ -2,6 +2,6 @@
 FROM python:3.7.10-buster
 ENV PYTHONUNBUFFERED 1
 WORKDIR /app
-COPY requirements.txt .
+COPY ./requirements.txt .
 RUN pip install -r requirements.txt
 COPY . .

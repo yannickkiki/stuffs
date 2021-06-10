@@ -23,7 +23,7 @@ services:
     volumes:
       - postgres_data:/var/lib/postgresql/
     env_file:
-      - compose/dev/postgres/.env
+      - ./compose/dev/postgres/.env
 
   redis:
     image: redis:5.0
