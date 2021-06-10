@@ -28,5 +28,5 @@ Some useful links:
 Draft
 Dev
 * python manage.py runserver
-* celery worker --beat --app config.celery_app --loglevel info
-* celery flower --app config.celery_app --loglevel info
+* bash start_celery_worker.sh
+* bash start_celery_flower.sh
