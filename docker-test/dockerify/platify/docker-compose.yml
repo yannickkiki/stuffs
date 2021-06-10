@@ -47,6 +47,8 @@ services:
   celeryflower:
     <<: *django
     container_name: celery_flower
+    depends_on:
+      - celeryworker
     ports:
       - "5555:5555"
     command: bash ./compose/dev/django/celery/flower/start.sh

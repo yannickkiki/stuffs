@@ -36,6 +36,8 @@ services:
   celeryflower:
     <<: *django
     container_name: celery_flower
+    depends_on:
+      - celeryworker
     env_file:
       - ./compose/prod/django/.env
       - ./compose/prod/django/celery/flower/proxy.env
@@ -58,6 +60,7 @@ services:
       - vhost:/etc/nginx/vhost.d
       - /var/run/docker.sock:/tmp/docker.sock:ro
     depends_on:
+      - celeryflower
       - web
 
   nginxproxyssl:
