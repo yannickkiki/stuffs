@@ -4,13 +4,9 @@ from django.urls import include, path
 from django.contrib import admin
 
 
-
-
-
 urlpatterns = [
-    path('', include(router.urls)),
+    path('', include(('platify.urls', 'platify'), namespace='platify')),
     path('admin/', admin.site.urls),
-    path('upload/', include(('platify.upload.urls', 'upload'), namespace='upload')),
 ]
 
 if settings.DEBUG:

@@ -1,6 +1,6 @@
 {% block content %}
 
-  <form action="{% url "upload:index" %}" method="post" enctype="multipart/form-data">
+  <form action="{% url "platify:upload:index" %}" method="post" enctype="multipart/form-data">
     {% csrf_token %}
     <input type="file" name="image_file">
     <input type="submit" value="submit" />

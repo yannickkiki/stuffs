@@ -31,6 +31,7 @@ INSTALLED_APPS = [
 
     # Local apps
     'platify',
+    'platify.fruit',
     'platify.product',
     'platify.upload',
 ]

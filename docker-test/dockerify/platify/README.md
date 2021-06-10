@@ -23,3 +23,10 @@ Some useful links:
 * https://gist.github.com/yannickkiki/f7f894541aca8ff56bb544176f0e0439
 * https://hub.docker.com/r/jwilder/nginx-proxy
 * https://hub.docker.com/r/nginxproxy/acme-companion
+
+
+Draft
+Dev
+* python manage.py runserver
+* celery worker --beat --app config.celery_app --loglevel info
+* celery flower --app config.celery_app --loglevel info

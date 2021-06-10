@@ -1,2 +1,3 @@
 staticfiles
 mediafiles
+celerybeat-schedule.db
