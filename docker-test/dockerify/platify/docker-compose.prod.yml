@@ -18,13 +18,15 @@ services:
   web:
     <<: *django
     container_name: web
-    volumes:
-      - static_files:/app/staticfiles/
-      - media_files:/app/mediafiles/
     env_file:
       - ./compose/prod/django/.env
       - ./compose/prod/django/web/proxy.env
     command: bash ./compose/prod/django/web/start.sh
+    expose:
+      - "8000"
+    volumes:
+      - static_files:/app/staticfiles/
+      - media_files:/app/mediafiles/
 
   celeryworker:
     <<: *django
@@ -42,6 +44,8 @@ services:
       - ./compose/prod/django/.env
       - ./compose/prod/django/celery/flower/proxy.env
     command: bash ./compose/prod/django/celery/flower/start.sh
+    expose:
+      - "5555"
 
   nginxproxy:
     container_name: nginx_proxy
@@ -52,6 +56,9 @@ services:
     ports:
       - "443:443"
       - "80:80"
+    depends_on:
+      - celeryflower
+      - web
     volumes:
       - static_files:/app/staticfiles/
       - media_files:/app/mediafiles/
@@ -59,23 +66,20 @@ services:
       - html:/usr/share/nginx/html
       - vhost:/etc/nginx/vhost.d
       - /var/run/docker.sock:/tmp/docker.sock:ro
-    depends_on:
-      - celeryflower
-      - web
 
   nginxproxyssl:
     container_name: nginx_proxy_ssl
     image: jrcs/letsencrypt-nginx-proxy-companion
+    env_file:
+      - ./compose/prod/nginx/ssl/.env
+    depends_on:
+      - nginxproxy
     volumes:
       - certs:/etc/nginx/certs
       - html:/usr/share/nginx/html
       - vhost:/etc/nginx/vhost.d
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - acme:/etc/acme.sh
-    env_file:
-      - ./compose/prod/nginx/ssl/.env
-    depends_on:
-      - nginxproxy
 
 
 volumes:
