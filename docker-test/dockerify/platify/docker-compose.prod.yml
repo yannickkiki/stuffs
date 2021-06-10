@@ -1,37 +1,67 @@
 version: "3.9"
 
+
+x-service-django: &django
+  build:
+    context: .
+    dockerfile: ./docker-compose/prod/django/Dockerfile
+  env_file:
+    - ./docker-compose/prod/django/.env
+
+
 services:
+
+  redis:
+    image: redis:5.0
+    container_name: redis
+
   web:
-    build:
-      context: .
-      dockerfile: ./docker-compose/prod/web/Dockerfile
+    <<: *django
+    container_name: web
     volumes:
-      - static-files:/app/staticfiles/
-      - media-files:/app/mediafiles/
-    expose:
-      - 8000
+      - static_files:/app/staticfiles/
+      - media_files:/app/mediafiles/
     env_file:
-      - ./docker-compose/prod/web/.env
-    command: bash ./docker-compose/prod/web/start.sh
-  nginx-proxy:
-    container_name: nginx-proxy
+      - ./docker-compose/prod/django/.env
+      - ./docker-compose/prod/django/web/proxy.env
+    command: bash ./docker-compose/prod/django/web/start.sh
+
+  celeryworker:
+    <<: *django
+    container_name: celery_worker
+    depends_on:
+      - redis
+    command: bash ./docker-compose/prod/django/celery/worker/start.sh
+
+  celeryflower:
+    <<: *django
+    container_name: celery_flower
+    env_file:
+      - ./docker-compose/prod/django/.env
+      - ./docker-compose/prod/django/celery/flower/proxy.env
+    command: bash ./docker-compose/prod/django/celery/flower/start.sh
+
+  nginxproxy:
+    container_name: nginx_proxy
     build:
       context: .
-      dockerfile: ./docker-compose/prod/nginx-proxy/Dockerfile
+      dockerfile: ./docker-compose/prod/nginx/proxy/Dockerfile
     restart: always
     ports:
-      - 443:443
-      - 80:80
+      - "443:443"
+      - "80:80"
     volumes:
-      - static-files:/app/staticfiles/
-      - media-files:/app/mediafiles/
+      - static_files:/app/staticfiles/
+      - media_files:/app/mediafiles/
       - certs:/etc/nginx/certs
       - html:/usr/share/nginx/html
       - vhost:/etc/nginx/vhost.d
       - /var/run/docker.sock:/tmp/docker.sock:ro
     depends_on:
       - web
-  nginx-proxy-ssl:
+
+  nginxproxyssl:
+    container_name: nginx_proxy_ssl
     image: jrcs/letsencrypt-nginx-proxy-companion
     volumes:
       - certs:/etc/nginx/certs
@@ -40,13 +70,14 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - acme:/etc/acme.sh
     env_file:
-      - ./docker-compose/prod/nginx-proxy-ssl/.env
+      - ./docker-compose/prod/nginx/ssl/.env
     depends_on:
-      - nginx-proxy
+      - nginxproxy
+
 
 volumes:
-  static-files:
-  media-files:
+  static_files:
+  media_files:
   certs:
   html:
   vhost:

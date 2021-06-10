@@ -38,7 +38,7 @@ services:
 
   celeryworker:
     <<: *django
-    container_name: celeryworker
+    container_name: celery_worker
     depends_on:
       - postgres
       - redis
@@ -46,7 +46,7 @@ services:
 
   celeryflower:
     <<: *django
-    container_name: celeryflower
+    container_name: celery_flower
     ports:
       - "5555:5555"
     command: bash ./docker-compose/dev/django/celery/flower/start.sh
