@@ -4,9 +4,9 @@ version: "3.9"
 x-service-django: &django
   build:
     context: .
-    dockerfile: ./docker-compose/prod/django/Dockerfile
+    dockerfile: ./compose/prod/django/Dockerfile
   env_file:
-    - ./docker-compose/prod/django/.env
+    - ./compose/prod/django/.env
 
 
 services:
@@ -22,30 +22,30 @@ services:
       - static_files:/app/staticfiles/
       - media_files:/app/mediafiles/
     env_file:
-      - ./docker-compose/prod/django/.env
-      - ./docker-compose/prod/django/web/proxy.env
-    command: bash ./docker-compose/prod/django/web/start.sh
+      - compose/prod/django/.env
+      - compose/prod/django/web/proxy.env
+    command: bash ./compose/prod/django/web/start.sh
 
   celeryworker:
     <<: *django
     container_name: celery_worker
     depends_on:
       - redis
-    command: bash ./docker-compose/prod/django/celery/worker/start.sh
+    command: bash ./compose/prod/django/celery/worker/start.sh
 
   celeryflower:
     <<: *django
     container_name: celery_flower
     env_file:
-      - ./docker-compose/prod/django/.env
-      - ./docker-compose/prod/django/celery/flower/proxy.env
-    command: bash ./docker-compose/prod/django/celery/flower/start.sh
+      - compose/prod/django/.env
+      - compose/prod/django/celery/flower/proxy.env
+    command: bash ./compose/prod/django/celery/flower/start.sh
 
   nginxproxy:
     container_name: nginx_proxy
     build:
       context: .
-      dockerfile: ./docker-compose/prod/nginx/proxy/Dockerfile
+      dockerfile: compose/prod/nginx/proxy/Dockerfile
     restart: always
     ports:
       - "443:443"
@@ -70,7 +70,7 @@ services:
       - /var/run/docker.sock:/var/run/docker.sock:ro
       - acme:/etc/acme.sh
     env_file:
-      - ./docker-compose/prod/nginx/ssl/.env
+      - compose/prod/nginx/ssl/.env
     depends_on:
       - nginxproxy
 
