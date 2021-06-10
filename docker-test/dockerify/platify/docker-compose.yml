@@ -1,28 +1,56 @@
 version: "3.9"
 
+
+x-service-django: &django
+  build:
+    context: .
+    dockerfile: ./docker-compose/dev/django/Dockerfile
+    network: host
+  depends_on:
+    - postgres
+  volumes:
+    - .:/app
+  env_file:
+    - ./docker-compose/dev/postgres/.env
+    - ./docker-compose/dev/django/.env
+
+
 services:
-  postgresdb:
+
+  postgres:
     image: postgres:13.3
+    container_name: postgres
     volumes:
-      - postgres-db-data:/var/lib/postgresql/
-    expose:
-      - 5432
+      - postgres_data:/var/lib/postgresql/
     env_file:
-      - ./docker-compose/dev/postgresdb/.env
+      - ./docker-compose/dev/postgres/.env
+
+  redis:
+    image: redis:5.0
+    container_name: redis
+
   web:
-    build:
-      context: .
-      dockerfile: ./docker-compose/dev/web/Dockerfile
-      network: host
-    depends_on:
-      - postgresdb
-    volumes:
-      - .:/app
+    <<: *django
+    container_name: web
     ports:
-      - 8000:8000
-    env_file:
-      - ./docker-compose/dev/web/.env
-    command: bash ./docker-compose/dev/web/start.sh
+      - "8000:8000"
+    command: bash ./docker-compose/dev/django/web/start.sh
+
+  celeryworker:
+    <<: *django
+    container_name: celeryworker
+    depends_on:
+      - postgres
+      - redis
+    command: bash ./docker-compose/dev/django/celery/worker/start.sh
+
+  celeryflower:
+    <<: *django
+    container_name: celeryflower
+    ports:
+      - "5555:5555"
+    command: bash ./docker-compose/dev/django/celery/flower/start.sh
+
 
 volumes:
-  postgres-db-data:
+  postgres_data:

@@ -4,7 +4,7 @@ import os
 
 s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
-db_host, db_port = os.environ['POSTGRES_DB_HOST'], os.environ['POSTGRES_DB_PORT']
+db_host, db_port = os.environ['POSTGRES_HOST'], os.environ['POSTGRES_PORT']
 while True:
     try:
         s.connect((db_host, int(db_port)))
