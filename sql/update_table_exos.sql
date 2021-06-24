@@ -37,15 +37,19 @@ UPDATE employees SET salary=
         ELSE salary
     END;
 
-<<<<<<< 7d7b3797e712139683354bc252c7bb08819db15c
 
 UPDATE record SET unitssold_int = CAST( unitssold AS INTEGER);
 UPDATE record SET columni_inti = floor(random() * 10)::int;
-=======
+
 UPDATE employees SET salary =
     CASE
       WHEN id < 3 THEN id*50000
       WHEN id=3 THEN id*60000
       ELSE id*70000
     END;
->>>>>>> - stuffs
+
+UPDATE twc
+SET su = cm.w
+FROM cm
+    INNER JOIN tl ON cm.id = tl.cm_id
+WHERE twc.tl_id = tl.id
