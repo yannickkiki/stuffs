@@ -17,6 +17,12 @@ class Product(models.Model):
     is_active = models.BooleanField(default=False)
 
 
+class ProductProxy(Product):
+
+    class Meta:
+        proxy = True
+
+
 class ProductSettings(models.Model):
     description = models.CharField(max_length=255)
     product_id = models.IntegerField()  # one to one referencing Product
