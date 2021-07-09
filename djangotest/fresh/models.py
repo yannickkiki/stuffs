@@ -20,6 +20,7 @@ class Product(models.Model):
 class ProductProxy(Product):
 
     class Meta:
+        managed = False
         proxy = True
 
 
