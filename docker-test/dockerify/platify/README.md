@@ -37,3 +37,13 @@ and confirm that when you go on http://localhost:8000/fruit/produce/, you have
 the message reception log
 * confirm that products api is working http://localhost:8000/api/product/
 * confirm that you can upload files at http://localhost:8000/upload/
+
+Features:
+- docker architecture for deploy 
+- nginx reverse proxy configuration, sub-domains & SSL: web, flower
+- rest api structure with djangorestframework
+- views also available
+- files upload on server
+- support for async jobs via celery
+- support for messages consuming in micro services architecture
+- basic user authentication system (email, password), verification emails, etc
