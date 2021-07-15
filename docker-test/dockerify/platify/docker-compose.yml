@@ -25,33 +25,50 @@ services:
     env_file:
       - ./compose/dev/postgres/.env
 
-  redis:
-    image: redis:5.0
-    container_name: redis
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "15672:15672"
+
+  rabbitmq_remote:
+    image: rabbitmq:3-management
+    container_name: rabbitmq_remote
 
   web:
     <<: *django
     container_name: web
+    depends_on:
+      - postgres
+      - rabbitmq  # to delay asynchronous tasks
     ports:
       - "8000:8000"
     command: bash ./compose/dev/django/web/start.sh
 
-  celeryworker:
+  cron:
     <<: *django
-    container_name: celery_worker
+    container_name: cron
     depends_on:
       - postgres
-      - redis
-    command: bash ./compose/dev/django/celery/worker/start.sh
+      - rabbitmq
+    command: bash ./compose/dev/django/celery/cron/start.sh
 
-  celeryflower:
+  flower:
     <<: *django
-    container_name: celery_flower
+    container_name: flower
     depends_on:
-      - celeryworker
+      - cron
     ports:
       - "5555:5555"
     command: bash ./compose/dev/django/celery/flower/start.sh
+
+  consumer:
+    <<: *django
+    container_name: consumer
+    depends_on:
+      - rabbitmq_remote
+      - postgres
+    command: bash ./compose/dev/django/celery/consumer/start.sh
 
 
 volumes:

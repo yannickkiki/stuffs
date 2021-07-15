@@ -11,13 +11,17 @@ x-service-django: &django
 
 services:
 
-  redis:
-    image: redis:5.0
-    container_name: redis
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "15672:15672"
 
   web:
     <<: *django
     container_name: web
+    depends_on:
+      - rabbitmq
     env_file:
       - ./compose/prod/django/.env
       - ./compose/prod/django/web/proxy.env
@@ -28,24 +32,29 @@ services:
       - static_files:/app/staticfiles/
       - media_files:/app/mediafiles/
 
-  celeryworker:
+  cron:
     <<: *django
-    container_name: celery_worker
+    container_name: cron
     depends_on:
-      - redis
-    command: bash ./compose/prod/django/celery/worker/start.sh
+      - rabbitmq
+    command: bash ./compose/prod/django/celery/cron/start.sh
 
-  celeryflower:
+  flower:
     <<: *django
-    container_name: celery_flower
+    container_name: flower
     depends_on:
-      - celeryworker
+      - cron
     env_file:
       - ./compose/prod/django/.env
       - ./compose/prod/django/celery/flower/proxy.env
     command: bash ./compose/prod/django/celery/flower/start.sh
     expose:
       - "5555"
+
+  consumer:
+    <<: *django
+    container_name: consumer
+    command: bash ./compose/prod/django/celery/consumer/start.sh
 
   nginxproxy:
     container_name: nginx_proxy
@@ -57,8 +66,8 @@ services:
       - "443:443"
       - "80:80"
     depends_on:
-      - celeryflower
       - web
+      - flower
     volumes:
       - static_files:/app/staticfiles/
       - media_files:/app/mediafiles/
