@@ -42,8 +42,10 @@ INSTALLED_APPS = [
     'plant',
     'braintreepay',
     'fresh',
+    'audience',
+    'campaign',
 
-    'corsheaders'
+    'corsheaders',
 ]
 
 MIDDLEWARE = [
