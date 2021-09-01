@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'fresh',
     'audience',
     'campaign',
+    'tweetify',
 
     'corsheaders',
 ]
@@ -96,9 +97,9 @@ WSGI_APPLICATION = 'Djangotest.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': 'djangotest',
-        'USER': 'yannick',
-        'PASSWORD': 'yannick',
+        'NAME': 'sqlify',
+        'USER': 'sqlify',
+        'PASSWORD': 'sqlify',
         'HOST': '127.0.0.1',
         'PORT': '5432',
     }
