@@ -8,3 +8,7 @@ class Department(models.Model):
 class Employee(models.Model):
     department = models.ForeignKey(Department, on_delete=models.CASCADE)
     full_name = models.CharField(max_length=255)
+
+
+class Tweet(models.Model):
+    likes_count = models.IntegerField()
